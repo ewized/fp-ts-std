@@ -320,6 +320,16 @@ describe("Function", () => {
         ])(constant("fallback"))(123),
       ).toBe("y")
     })
+
+    it("", () => {
+      expect(
+        f<"a" | "b" | "c", string>([
+          [(s): s is "a" => s === "a", (s: "a") => s],
+          [(s): s is "b" => s === "b", identity],
+          [(s): s is "c" => s === "c", identity],
+      ])(constant("fallback"))("b"),
+      ).toBe("b")
+    })
   })
 
   describe("ifElse", () => {

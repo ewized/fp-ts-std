@@ -309,18 +309,18 @@ export const unary: <A extends Array<unknown>, B>(
  *
  * @category 3 Functions
  * @since 0.6.0
- */
-export const guard =
-  <A, B>(branches: Array<[Predicate<A>, (x: A) => B]>) =>
-  (fallback: (x: A) => B) =>
+ */ 
+export const guard = <A, B, C extends A = A>(branches: Array<[Refinement<A, C>, (x: C) => B]>): (fallback: (x: A) => B) => (input: A) => B =>
+ (fallback: (x: A) => B) =>
   (input: A): B =>
     pipe(
-      branches,
-      A.map(([f, g]) => flow(O.fromPredicate(f), O.map(g))),
-      concatAll(getFunctionMonoid(O.getMonoid<B>(first()))<A>()),
-      apply(input),
-      O.getOrElse(() => fallback(input)),
-    )
+     branches,
+     A.map(([f, g]) => flow(O.fromPredicate(f), O.map(g))),
+     concatAll(getFunctionMonoid(O.getMonoid<B>(first()))<A>()),
+     apply(input),
+     O.getOrElse(() => fallback(input)),
+     )
+
 
 /**
  * Creates a function that processes the first morphism if the predicate
